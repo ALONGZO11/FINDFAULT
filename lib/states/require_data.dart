@@ -18,7 +18,7 @@ class _ReqireDataState extends State<ReqireData> {
   String? brekerChoosed;
   bool loadBreaker = true;
 
-  List<String> typeBreakers = ['slg', '2ph', '2phg', '3ph'];
+  List<String> typeBreakers = ['SLG', '2PH', '2PHG', '3PH'];
 
   String? typeBreaker;
   String? currentMaxStr;
@@ -86,8 +86,6 @@ class _ReqireDataState extends State<ReqireData> {
           } else if ((currentMaxStr == null) || (currentMaxStr!.isEmpty)) {
             Mydialog().normalDialog(context, 'ไม่มีค่ากระแส', 'กรุณาใส่ข้อมูล');
           } else {
-            print(
-                '## breakerchoose = $brekerChoosed, typebreker =$typeBreaker, currentmax = $currentMaxStr');
             processCalculate();
           }
         },
@@ -97,31 +95,65 @@ class _ReqireDataState extends State<ReqireData> {
   }
 
   Future<Null> processCalculate() async {
+    print(
+        '### breakerchoose = $brekerChoosed, typebreker =$typeBreaker, currentmax = $currentMaxStr');
+
     await Firebase.initializeApp().then((value) async {
       await FirebaseFirestore.instance
           .collection('breaker')
           .doc(brekerChoosed)
           .collection(typeBreaker!)
-          .where('current', isEqualTo: currentMaxStr)
-          .snapshots()
-          .listen((event) {
-        print('##event from Snapshot ==>> ${event.docs}');
-        if (event.docs.toString() == '[]') {
-          Mydialog().normalDialog(context, 'ไม่พบข้อมูล', 'รออัพเดทฐานข้อมูล');
-        } else {
-          for (var item in event.docs) {
-            CurrentModle model = CurrentModle.fromMap(item.data());
-            print('## lat = ${model.lat}, long = ${model.long}');
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ShowMap(currentModle: model),
-              ),
-            );
+          .get()
+          .then((value) {
+        int? distant;
+        CurrentModel? nearestModel;
+        bool first = true;
+
+        for (var item in value.docs) {
+          CurrentModel model = CurrentModel.fromMap(item.data());
+          int test = int.parse(currentMaxStr!) - model.current;
+          test = test.abs();
+          print(' ### test => $test');
+          if (first) {
+            distant = test;
+            first = false;
+            nearestModel = CurrentModel.fromMap(item.data());
+          } else if (distant! > test) {
+            distant = test;
+            nearestModel = CurrentModel.fromMap(item.data());
           }
         }
+
+        print('###current ใกล้สุด ${nearestModel!.current}');
+
       });
     });
+
+    // await Firebase.initializeApp().then((value) async {
+    //   await FirebaseFirestore.instance
+    //       .collection('breaker')
+    //       .doc(brekerChoosed)
+    //       .collection(typeBreaker!)
+    //       .where('current', isEqualTo: currentMaxStr)
+    //       .snapshots()
+    //       .listen((event) {
+    //     print('##event from Snapshot ==>> ${event.docs}');
+    //     if (event.docs.toString() == '[]') {
+    //       Mydialog().normalDialog(context, 'ไม่พบข้อมูล', 'รออัพเดทฐานข้อมูล');
+    //     } else {
+    //       for (var item in event.docs) {
+    //         CurrentModle model = CurrentModle.fromMap(item.data());
+    //         print('## lat = ${model.lat}, long = ${model.long}');
+    //         Navigator.push(
+    //           context,
+    //           MaterialPageRoute(
+    //             builder: (context) => ShowMap(currentModle: model),
+    //           ),
+    //         );
+    //       }
+    //     }
+    //   });
+    // });
   }
 
   Container BuildCurrent() {

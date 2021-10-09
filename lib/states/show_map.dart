@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ShowMap extends StatefulWidget {
-  final CurrentModle currentModle;
+  final CurrentModel currentModle;
   const ShowMap({Key? key, required this.currentModle}) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class _ShowMapState extends State<ShowMap> {
   double? lat;
   double? long;
   Map<MarkerId, Marker> markers = {};
-  CurrentModle? currentModle;
+  CurrentModel? currentModle;
   @override
   void initState() {
     // TODO: implement initState

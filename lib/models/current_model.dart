@@ -1,21 +1,22 @@
 import 'dart:convert';
 
-class CurrentModle {
-  final String current;
+class CurrentModel {
+  final int current;
   final double lat;
   final double long;
-  CurrentModle({
+  CurrentModel({
     required this.current,
     required this.lat,
     required this.long,
   });
+  
 
-  CurrentModle copyWith({
-    String? current,
+  CurrentModel copyWith({
+    int? current,
     double? lat,
     double? long,
   }) {
-    return CurrentModle(
+    return CurrentModel(
       current: current ?? this.current,
       lat: lat ?? this.lat,
       long: long ?? this.long,
@@ -30,8 +31,8 @@ class CurrentModle {
     };
   }
 
-  factory CurrentModle.fromMap(Map<String, dynamic> map) {
-    return CurrentModle(
+  factory CurrentModel.fromMap(Map<String, dynamic> map) {
+    return CurrentModel(
       current: map['current'],
       lat: map['lat'],
       long: map['long'],
@@ -40,16 +41,16 @@ class CurrentModle {
 
   String toJson() => json.encode(toMap());
 
-  factory CurrentModle.fromJson(String source) => CurrentModle.fromMap(json.decode(source));
+  factory CurrentModel.fromJson(String source) => CurrentModel.fromMap(json.decode(source));
 
   @override
-  String toString() => 'CurrentModle(current: $current, lat: $lat, long: $long)';
+  String toString() => 'CurrentModel(current: $current, lat: $lat, long: $long)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is CurrentModle &&
+    return other is CurrentModel &&
       other.current == current &&
       other.lat == lat &&
       other.long == long;
