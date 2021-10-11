@@ -1,4 +1,5 @@
 import 'package:findfault/XD_intro.dart';
+import 'package:findfault/XDinput.dart';
 import 'package:findfault/states/authen.dart';
 import 'package:findfault/states/ceate_database.dart';
 import 'package:findfault/states/require_data.dart';
@@ -7,16 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 
 final Map<String, WidgetBuilder> map = {
-  // '/authen': (BuildContext context) => Authen(),
+  //  '/authen': (BuildContext context) => Authen(),
   '/requireData': (BuildContext context) => ReqireData(),
   '/createdatabase': (BuildContext context) => CreateDatabase(),
-  '/intro': (BuildContext context) => XD_intro()
+  '/intro': (BuildContext context) => XD_intro(),
+  '/input' : (BuildContext context) => XDinput()
 };
 
 String? firstState;
 
 void main() {
-  firstState = '/intro';
+  firstState = '/input';
   runApp(MyApp());
 }
 
